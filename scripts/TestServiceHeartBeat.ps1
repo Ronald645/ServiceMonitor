@@ -1,7 +1,7 @@
 ﻿[System.String] $utct = (Get-Date(Get-Date).ToUniversalTime() -uformat "%s")
 $utct = $utct -replace ',', '.'
 [System.Decimal] $utc = $utct
-[system.string] $service = 'ABS EKT Inlezen 5'
+[system.string] $service = 'ABS EKT Inlezen 10'
 
 [System.Object] $body = New-Object system.object
 Add-Member -InputObject $body -MemberType NoteProperty -Name CreatedHeartBeatAt -Value ([system.math]::floor($utc))
