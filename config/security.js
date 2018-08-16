@@ -44,6 +44,6 @@ module.exports.security = {
   *                                                                           *
   ****************************************************************************/
 
-  csrf: true
+  csrf: false // disable for local development without slow sails
 
 };

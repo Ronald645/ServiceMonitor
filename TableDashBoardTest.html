@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ServiceMonitor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  </head>
+<body>
+  <div id="tabledashboard">
+    <div class="container">
+      <h1>Table dashboard</h1>
+    </div>
+  </div>
+  </body>
+    <script type="text/javascript">delete window.self;</script>
+    <script url='http://127.0.0.1:1337' src="http://127.0.0.1:1337/dependencies/sails.io.js"></script>
+    <script src="http://127.0.0.1:1337/dependencies/lodash.js"></script>
+    <script src="http://127.0.0.1:1337/dependencies/jquery.min.js"></script>
+    <script src="http://127.0.0.1:1337/dependencies/bowser.js"></script>
+    <script src="http://127.0.0.1:1337/dependencies/vue.js"></script>
+    <script src="http://127.0.0.1:1337/dependencies/bootstrap-4/bootstrap-4.bundle.js"></script>
+    <script src="http://127.0.0.1:1337/dependencies/cloud.js"></script>
+    <script src="http://127.0.0.1:1337/dependencies/parasails.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.2/angular.min.js"></script>
+
+    <script type="text/javascript">
+  		var statuses;
+  		var deadstatus;
+      var tmp;
+
+  		var sessions;
+
+  		$(document).ready(function() {
+        io.socket.on('disconnect', function onDisconnect(){
+  				alert('We lost the connection, please refresh the page.');
+  			});
+
+        io.socket.get('/servicestatus', function(resData) {
+    				statuses = resData;
+
+    				for (var idx = 0; idx < statuses.length; idx++) {
+    					if (statuses[idx].statusID === 5) {
+    					deadstatus = statuses[idx];
+    				}
+  			  };
+
+          io.socket.on('serviceheartbeatsession', function(resData) {
+            tmp = resData;
+          });
+
+          io.socket.request(
+              {
+                  method: 'get'
+                  , url: '/serviceheartbeatsession'
+                  , data: { where: { status : { 'nin' : [deadstatus.id] }}}
+                  //, headers : { 'x-csrf-token': (window.SAILS_LOCALS ? SAILS_LOCALS._csrf : 'x') }
+              },
+              function(resData, jwres) {
+                sessions = resData;
+                //console.log(sessions.length);
+                //console.log(jwres)
+              ;}
+          );
+        });
+
+        /*
+  			if (window.SAILS_LOCALS) {
+  				console.log('_csrf token: ' + SAILS_LOCALS._csrf);
+  			} else {
+  				console.log('csrf token not available');
+  			}
+
+  			console.log('deadstatus: ' + deadstatus);
+
+  				io.socket.get('/serviceheartbeatsession', { status : { '!=' : deadstatus._id }}, function(resData) {
+  					sessions = resData;
+  					console.log(sessions.length);
+
+  					io.socket.get('/serviceheartbeatsession', function(resData) {
+  						sessions = resData;
+  						console.log(sessions.length);
+  					});
+
+  					io.socket.on('serviceheartbeatsession', function(resData) {
+  						console.log(Date() + ': ' + resData.verb);
+  					});
+  				});
+  			});
+        */
+
+  			////io.socket.put('/serviceheartbeatsession/5b6f080a86019985d4009acb?_csrf='+encodeURIComponent(SAILS_LOCALS._csrf)
+        io.socket.patch('/serviceheartbeatsession/5b6f082086019985d4009acf' //?_csrf='+encodeURIComponent(SAILS_LOCALS._csrf)
+  				, { remoteHostName : "TESTFROMREMOTE!@!@" }
+  				, (resData, jwr) => {
+  				console.log(resData);
+  				console.log(jwr);
+  			});
+		});
+	</script>
+  </body>
+</html>

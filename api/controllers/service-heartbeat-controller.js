@@ -120,11 +120,21 @@ module.exports = {
           //\node_modules\sails\lib\hooks\pubsub\index.js _introduce
           // Use addRoomMembersToRooms to subscribe everyone in the class room to the model identity instance room
           sails.sockets.addRoomMembersToRooms(ServiceHeartBeatSession._classRoom(), ServiceHeartBeatSession._room(session.id), () => {
-            ServiceHeartBeatSession.publish([ session.id ], { "verb": "created" });
+            ServiceHeartBeatSession.publish([ session.id ], {
+                verb: "created"
+              , type: "nosailsblueprint"
+              , data: session
+              , id: session.id
+            });
             //return this.res.send();
           });
         } else {
-          ServiceHeartBeatSession.publish([ session.id ], { "verb": "updated" });
+          ServiceHeartBeatSession.publish([ session.id ], {
+              verb: "updated"
+            , type: "nosailsblueprint"
+            , data: session
+            , id: session.id
+          });
         }
 
         return exits.success();
