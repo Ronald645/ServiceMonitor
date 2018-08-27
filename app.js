@@ -30,6 +30,10 @@ process.chdir(__dirname);
 // $env:NODE_ENV = 'development'
 // sails console
 
+// NODEJS Docker bridge
+process.env.NODE_ENV = 'development';
+global.appjsstart = 1;
+
 // Attempt to import `sails` dependency, as well as `rc` (for loading `.sailsrc` files).
 var sails;
 var rc;

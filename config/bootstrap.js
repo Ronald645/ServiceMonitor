@@ -85,6 +85,10 @@ module.exports.bootstrap = async function(done) {
 */
 
 module.exports.bootstrap = async function(done) {
+  if (!global.appjsstart) {
+    throw Error('Please start this application with `node app.js` and configure app.js accordingly');
+  }
+
   var statusid = [1, 2, 3, 4, 5];
   var statusname = ["Ok", "Error", "Unknown", "Timeout", "Dead"];
 

@@ -1,16 +1,22 @@
-emitTimeoutOnServiceHeartBeatSession = require('./cron/emitTimeoutOnServiceHeartBeatSession');
-setAverageIntervalOnServiceHeartBeatSession = require('./cron/setAverageIntervalOnServiceHeartBeatSession')
+const emitTimeoutOnServiceHeartBeatSession = require('./cron/emitTimeoutOnServiceHeartBeatSession');
+const setAverageIntervalOnServiceHeartBeatSession = require('./cron/setAverageIntervalOnServiceHeartBeatSession')
+const environmentconfig = require ('./environmentconfig.js');
 
-module.exports.cron = {
-  setTimeoutOnServiceHeartBeatSession: {
+module.exports.cron = {};
+
+if (environmentconfig.backends.length == 0 || environmentconfig.backends.indexOf('timeoutheartbeat') > -1) {
+  module.exports.cron['setTimeoutOnServiceHeartBeatSession'] = {
     schedule: '0 5-59/10 * * * *',
     onTick: setAverageIntervalOnServiceHeartBeatSession.fn
   },
 
-  emitTimeoutOnServiceHeartBeatSession: {
+  module.exports.cron['emitTimeoutOnServiceHeartBeatSession'] = {
     schedule: '0 10-59/10 * * * *',
     onTick: emitTimeoutOnServiceHeartBeatSession.fn
-  },
+  }
+} else {
+  console.log(' - Disabling: `timeoutheartbeat` functionality');
+};
 
   //secondJob: {
   //  schedule: '*/5 * * * * *',
@@ -34,4 +40,4 @@ module.exports.cron = {
 
   var deadstatus = await ServiceStatus.findOne({ statusID: 5 });
   */
-};
+//};
